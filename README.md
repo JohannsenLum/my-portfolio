@@ -4,8 +4,9 @@ A modern, responsive portfolio website built with [React + Tailwind CSS] to show
 
 ## 🚀 Live Demo
 
-🔗 <a href="https://my-portfolio-gilt-ten-31.vercel.app/" target="_blank">Visit My Portfolio</a>
+🔗 [Visit My Portfolio](https://my-portfolio-gilt-ten-31.vercel.app)
 
+> 💡 Tip: Ctrl+Click (or Cmd+Click) to open in a new tab!
 
 ## 🛠️ Tech Stack
 
