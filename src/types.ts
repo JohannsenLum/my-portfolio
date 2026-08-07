@@ -25,3 +25,12 @@ export interface Project {
     phone?: string;
     location?: string;
   }
+
+  export interface ExperienceEntry {
+    title: string;
+    org: string;
+    period: string;
+    summary: string;
+    bullets?: string[];
+    tech: string[];
+  }

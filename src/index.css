@@ -2,9 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling */
+/* ------------------------------------------------------------------ */
+/* Global visual layer                                                */
+/* ------------------------------------------------------------------ */
+
+/* Base canvas colour so the ambient gradient below always sits on a
+   colour that matches the current theme, not the browser default. */
 html {
-  scroll-behavior: smooth;
+  background-color: #ffffff;
+}
+
+html.dark {
+  background-color: #0f1420;
+}
+
+/*
+ * Ambient background: a soft, low-contrast mesh of radial gradients,
+ * fixed behind all page content. Deliberately faint — it should read
+ * as atmosphere, not decoration, and must never compete with whatever
+ * is in front of it. The drift is a config-driven animation utility
+ * (see tailwind.config.js) so the reduced-motion safety net below
+ * neutralises it automatically, the same as every other animation.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(ellipse 60% 45% at 12% 8%, rgba(99, 102, 241, 0.07), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 88% 15%, rgba(129, 140, 248, 0.06), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 105%, rgba(99, 102, 241, 0.05), transparent 65%);
+  @apply animate-mesh-drift;
+}
+
+.dark body::before {
+  background-image:
+    radial-gradient(ellipse 60% 45% at 12% 8%, rgba(99, 102, 241, 0.14), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 88% 15%, rgba(79, 70, 229, 0.16), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 105%, rgba(129, 140, 248, 0.08), transparent 65%);
+}
+
+/* Smooth scrolling for in-page anchor links, only when the visitor
+   hasn't asked their OS to reduce motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/*
+ * Safety net: forces every animation and transition on the page to be
+ * effectively instant for anyone who has asked their OS to reduce
+ * motion. This exists to backstop any bespoke (non-framer-motion) CSS
+ * animation a component forgets to guard individually — framer-motion
+ * animations are handled separately via the app-wide
+ * <MotionConfig reducedMotion="user"> in App.tsx.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus-visible styling: keep focus states clearly visible, styled
+   with the site's indigo accent instead of the browser default. */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.dark :focus-visible {
+  outline-color: #818cf8;
 }
 
 /* Custom scrollbar */

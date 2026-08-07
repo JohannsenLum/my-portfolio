@@ -1,9 +1,21 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
 import { SocialLink, ContactInfo } from '../types';
+import { fadeUp, stagger, revealOnce } from '../hooks/useReveal';
+
+// Same curve as useReveal's EASE — kept local since hover/tap interactions
+// aren't part of the shared reveal variants but should still read as one system.
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const Contact: React.FC = () => {
   const { theme } = useTheme();
+  const reduceMotion = useReducedMotion();
+
+  const rowHover = reduceMotion ? undefined : { y: -3, scale: 1.02 };
+  const iconHoverClass = 'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110';
+  const socialHover = reduceMotion ? undefined : { y: -4, scale: 1.05 };
+  const socialTap = reduceMotion ? undefined : { scale: 0.95 };
 
   const contactInfo: ContactInfo = {
     email: 'lumjohannsen@gmail.com',
@@ -44,93 +56,115 @@ const Contact: React.FC = () => {
   return (
     <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl dark:text-white font-bold mb-4 text-center">
-            Get In <span className="text-indigo-500">Touch</span>
-          </h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Feel free to reach out for collaborations or just a friendly hello
-          </p>
-        </div>
+        <motion.div variants={stagger()} {...revealOnce}>
+          <motion.div variants={fadeUp} className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl dark:text-white font-bold mb-4 text-center">
+              Get In <span className="text-indigo-500">Touch</span>
+            </h2>
+            <div className="w-20 h-1 bg-indigo-600 mx-auto mt-4"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Feel free to reach out for collaborations or just a friendly hello
+            </p>
+          </motion.div>
 
-        <div className="flex flex-col items-center gap-12">
-          {/* Added container with gray background and rounded corners */}
-          <div className="w-full max-w-2xl bg-gray-100 dark:bg-gray-700 p-8 rounded-xl shadow-md">
-            <h3 className="text-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Contact Information</h3>
-            
-            <div className="space-y-6">
-              {/* Email */}
-              <div className="flex items-start">
-                <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center`}>
-                  <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Email</h4>
-                  <a href={`mailto:${contactInfo.email}`} className="text-base text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400">
-                    {contactInfo.email}
-                  </a>
-                </div>
-              </div>
+          <motion.div variants={stagger(0.1)} className="flex flex-col items-center gap-12">
+            <div className="w-full max-w-2xl bg-gray-100 dark:bg-gray-700 p-8 rounded-xl shadow-md">
+              <motion.h3 variants={fadeUp} className="text-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
+                Contact Information
+              </motion.h3>
 
-              {/* Phone */}
-              {contactInfo.phone && (
-                <div className="flex items-start">
-                  <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center`}>
+              <motion.div variants={stagger(0.08)} className="space-y-2">
+                {/* Email */}
+                <motion.div
+                  variants={fadeUp}
+                  whileHover={rowHover}
+                  transition={{ duration: 0.3, ease: EASE }}
+                  className="group flex items-start rounded-lg p-3 -m-3 transition-shadow duration-300 hover:shadow-md dark:hover:shadow-black/20"
+                >
+                  <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center ${iconHoverClass}`}>
                     <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Phone</h4>
-                    <a href={`tel:${contactInfo.phone.replace(/[^0-9+]/g, '')}`} className="text-base text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400">
-                      {contactInfo.phone}
+                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Email</h4>
+                    <a href={`mailto:${contactInfo.email}`} className="text-base text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                      {contactInfo.email}
                     </a>
                   </div>
-                </div>
-              )}
+                </motion.div>
 
-              {/* Location */}
-              {contactInfo.location && (
-                <div className="flex items-start">
-                  <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center`}>
-                    <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Location</h4>
-                    <p className="text-base text-gray-900 dark:text-white">
-                      {contactInfo.location}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Social Links */}
-            <div className="flex flex-col items-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
-              <h3 className="text-xl text-center font-semibold text-gray-800 dark:text-gray-200 mb-6">Follow Me</h3>
-              <div className="flex space-x-6">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-                    aria-label={link.name}
+                {/* Phone */}
+                {contactInfo.phone && (
+                  <motion.div
+                    variants={fadeUp}
+                    whileHover={rowHover}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className="group flex items-start rounded-lg p-3 -m-3 transition-shadow duration-300 hover:shadow-md dark:hover:shadow-black/20"
                   >
-                    {link.icon}
-                  </a>
-                ))}
-              </div>
+                    <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center ${iconHoverClass}`}>
+                      <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Phone</h4>
+                      <a href={`tel:${contactInfo.phone.replace(/[^0-9+]/g, '')}`} className="text-base text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                        {contactInfo.phone}
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Location */}
+                {contactInfo.location && (
+                  <motion.div
+                    variants={fadeUp}
+                    whileHover={rowHover}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className="group flex items-start rounded-lg p-3 -m-3 transition-shadow duration-300 hover:shadow-md dark:hover:shadow-black/20"
+                  >
+                    <div className={`flex-shrink-0 h-10 w-10 rounded-full ${theme === 'light' ? 'bg-indigo-100' : 'bg-indigo-900'} flex items-center justify-center ${iconHoverClass}`}>
+                      <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Location</h4>
+                      <p className="text-base text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                        {contactInfo.location}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {/* Social Links */}
+              <motion.div variants={fadeUp} className="flex flex-col items-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
+                <h3 className="text-xl text-center font-semibold text-gray-800 dark:text-gray-200 mb-6">Follow Me</h3>
+                <motion.div variants={stagger(0.08)} className="flex space-x-6">
+                  {socialLinks.map((link) => (
+                    <motion.a
+                      key={link.name}
+                      variants={fadeUp}
+                      whileHover={socialHover}
+                      whileTap={socialTap}
+                      transition={{ duration: 0.25, ease: EASE }}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                      aria-label={link.name}
+                    >
+                      {link.icon}
+                    </motion.a>
+                  ))}
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

@@ -19,6 +19,27 @@ module.exports = {
           900: '#312e81',
         },
       },
+      // The one easing curve used everywhere on the site (see
+      // src/hooks/useReveal.ts). Exposed as `ease-signature` so plain
+      // CSS transitions (e.g. the navbar's scroll-aware background)
+      // match the same feel as the framer-motion reveals.
+      transitionTimingFunction: {
+        signature: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
+      keyframes: {
+        // Very slow ambient drift for the global background mesh in
+        // index.css. Kept as a config-driven keyframe (rather than a
+        // hand-rolled @keyframes block) so the global prefers-reduced-motion
+        // safety net in index.css — which caps animation-duration on
+        // every element — also neutralises it for free.
+        'mesh-drift': {
+          '0%, 100%': { transform: 'translate3d(0, 0, 0) scale(1)' },
+          '50%': { transform: 'translate3d(-1.5%, 1.5%, 0) scale(1.05)' },
+        },
+      },
+      animation: {
+        'mesh-drift': 'mesh-drift 28s cubic-bezier(0.22, 1, 0.36, 1) infinite',
+      },
     },
   },
   plugins: [],
