@@ -78,13 +78,16 @@ const Hero: React.FC = () => {
           Year 4 CS student at NUS. Right now, most of my time goes into building open source.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mb-6 space-x-4"> {/* Add spacing between the buttons */}
+          <motion.div
+            variants={fadeUp}
+            className="mb-6 flex flex-wrap items-center justify-center md:justify-start gap-4"
+          >
             <motion.a
                 href="#projects"
                 whileHover={{ scale: 1.045 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.3, ease: EASE }}
-                className="relative inline-block px-6 py-3 bg-indigo-400 text-white rounded-lg shadow-md hover:bg-indigo-600 hover:shadow-xl hover:shadow-indigo-500/40 transition duration-300 overflow-hidden w-[200px] md:w-auto text-center"
+                className="relative inline-flex items-center justify-center px-6 py-3 border-2 border-transparent bg-indigo-400 text-white rounded-lg shadow-md hover:bg-indigo-600 hover:shadow-xl hover:shadow-indigo-500/40 transition duration-300 overflow-hidden w-[200px] md:w-auto text-center"
             >
                 <span className="relative z-10">View Projects</span>
                 {!reduceMotion && (
@@ -102,7 +105,7 @@ const Hero: React.FC = () => {
                 whileHover={{ scale: 1.035 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.3, ease: EASE }}
-                className="inline-block px-6 py-3 bg-white text-indigo-400 border-2 border-indigo-400 rounded-lg hover:bg-indigo-100 hover:shadow-lg hover:shadow-indigo-400/20 transition duration-300 w-[200px] md:w-auto text-center"
+                className="inline-flex items-center justify-center px-6 py-3 bg-white text-indigo-400 border-2 border-indigo-400 rounded-lg hover:bg-indigo-100 hover:shadow-lg hover:shadow-indigo-400/20 transition duration-300 w-[200px] md:w-auto text-center"
             >
                 Contact Me
             </motion.a>
