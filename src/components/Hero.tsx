@@ -75,7 +75,7 @@ const Hero: React.FC = () => {
             </motion.p>
 
           <motion.p variants={fadeUp} className="text-lg md:text-xl mb-6">
-          Year 4 CS student at NUS. Right now, most of my time goes into building open source.
+          Year 4 CS student at NUS. Right now, most of my time goes into building projects for clients and open source.
           </motion.p>
 
           <motion.div
